@@ -22,7 +22,6 @@ export default function App(props) {
     }
   }
   const handleOnComplete = (id) =>{
-    console.log(task)
     let newtable = [...task]
     let newtable2 = newtable.map(function(el){
         if(el.id==id){
@@ -32,7 +31,7 @@ export default function App(props) {
         else return el
         })
     setTask(newtable2)
-    console.log(task)
+
   }
 
   const handleDelete = (id) => {
