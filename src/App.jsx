@@ -6,50 +6,63 @@ import './App.css'
 export default function App(props) {
   const [value, SetValue] = useState("")
   const [task, setTask] = useState([])
-  const [ids, setIds] = useState(0)
+  const [ids, setIds] = useState(1)
   const handleChange = (e) =>{
       SetValue(e.target.value)
   }
   const handleSubmit = (e) =>{
-   
     e.preventDefault()
-    let newId = ids
-    let newTable = [...task]
-    setIds(newId+1)
-    newTable.push({id: ids, text: value, completed:true})
-    // console.log(task)
-    setTask(newTable)
+    if(value.length>1){
+        let newtable = [...task]
+        newtable.push({id:ids, text: value, completed: false})
+        setTask(newtable)
+        setIds(ids+1)
+    }else{
+      alert("You need to ener something")
+    }
   }
+  const handleOnComplete = (id) =>{
+    console.log(task)
+    let newtable = [...task]
+    let newtable2 = newtable.map(function(el){
+        if(el.id==id){
+          el.completed=!el.completed
+          return el
+        } 
+        else return el
+        })
+    setTask(newtable2)
+    console.log(task)
+  }
+
   const handleDelete = (id) => {
-    console.log(id)
-    let newTable = [...task]
-    let newTable2 = newTable.filter((item) => item.id==id)
-    setTask(newTable2)
-    
+    let newtable = [...task]
+    let newtable2 = newtable.filter((el) => el.id!=id)
+    setTask(newtable2)  
   }
 
  return(<div className='main'>
     <form>
-          <input onChange={handleChange} className="inputText" placeholder="Enter task" value={value}></input>
+          <input onChange={handleChange} className="inputText" placeholder="  Enter task" value={ value}></input>
           <button onClick={handleSubmit} type='submit'>
               <span className="text">Add task</span>
           </button>
       </form>
-      <div>
+
       <div className="wrapper">
-        <div className="circle-1"></div>
-        <div className="circle-2"></div>
+        {task.length>0?<h2 className='title'>My to do list</h2>:<></>}
         <div className="card">
-          <section className="bottom">
+        
             <ul className="users">
-           
-              {task.map((item)=> <li className="user">
-                <p className="user-name">{item.text}</p> <button>completed</button> <button onClick={() => handleDelete(item.id)}>Delete</button>
+              {task.map((item)=> <li key={item.id} className="user">
+                <p className="user-name">
+                  {!item?.completed?<span > {item.text}</span>:<span className='completed'> {item.text}</span>} 
+                </p> 
+                <button onClick={() => handleOnComplete(item.id)}>{!item.completed?<>completed</>:<>uncompleted</>}</button>
+                 <button onClick={() => handleDelete(item.id)}>Delete</button>
               </li>)} 
             </ul>
-          </section>
         </div>
         </div>
-      </div>
- </div>)
+      </div>)
 }
